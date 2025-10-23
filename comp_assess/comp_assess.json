@@ -1,0 +1,61 @@
+{
+  "doc_type": "Comprehensive Assessment",
+  "version": "0.1",
+  "global_instructions": {
+    "source_of_truth": "Use only facts from the uploaded PDF. If information is missing, write: 'Information not available at time of assessment.' Do not guess.",
+    "style": "Objective, concise, payer-compliant. Use full sentences. Avoid jargon and speculation.",
+    "compliance_focus": "Include frequency, intensity, duration, and functional impairment when relevant. Explain why lower level of care is insufficient when risk is present.",
+    "dates_times": "Use ISO dates when exact dates are present in the PDF; otherwise, keep narrative without inventing dates."
+  },
+  "sections": [
+    {
+      "id": "presenting_problems",
+      "title": "Presenting Problems",
+      "instruction": "Summarize the client’s primary concerns and reasons for the encounter based on the PDF.",
+      "required": true,
+      "length": "3-5 sentences"
+    },
+    {
+      "id": "symptoms",
+      "title": "Current Psychiatric Symptoms",
+      "instruction": "List key symptoms and, when available, include frequency, intensity, and duration (FID).",
+      "required": true,
+      "length": "short_paragraph"
+    },
+    {
+      "id": "risk",
+      "title": "Risk Assessment",
+      "instruction": "Document SI/HI status, access to means, recent attempts, and environmental risks exactly as stated in the PDF.",
+      "required": true,
+      "length": "short_paragraph"
+    },
+    {
+      "id": "functional_impairment",
+      "title": "Functional Impairments",
+      "instruction": "Describe how symptoms impact ADLs, work/school, relationships, and safety.",
+      "required": true,
+      "length": "3-4 bullet sentences"
+    },
+    {
+      "id": "supports",
+      "title": "Supports & Protective Factors",
+      "instruction": "Note natural supports, transportation, coping skills, and any scheduled provider appointments.",
+      "required": false,
+      "length": "short_paragraph"
+    },
+    {
+      "id": "plan",
+      "title": "Plan / Recommendations",
+      "instruction": "State interventions, referrals, level of care justification, and concrete next steps with dates/times if present in the PDF.",
+      "required": true,
+      "length": "5-7 sentences"
+    },
+    {
+      "id": "safety_plan",
+      "title": "Safety Plan",
+      "instruction": "If risk is present, write a brief safety plan using only facts from the PDF (contacts, means restriction, crisis steps). If no risk is present, write 'Information not available at time of assessment.'",
+      "required": false,
+      "length": "short_paragraph"
+    }
+  ]
+}
