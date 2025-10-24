@@ -1,193 +1,235 @@
 {
   "doc_type": "Comprehensive Assessment",
-  "version": "0.1",
+  "version": "0.2",
   "global_instructions": {
     "source_of_truth": "Use only facts from the uploaded PDF. If information is missing, write: 'Information not available at time of assessment.' Do not guess.",
     "style": "Objective, concise, payer-compliant. Use full sentences. Avoid jargon and speculation.",
-    "compliance_focus": "Include frequency, intensity, duration, and functional impairment when relevant. Explain why lower level of care is insufficient when risk is present.",
-    "dates_times": "Use ISO dates when exact dates are present in the PDF; otherwise, keep narrative without inventing dates."
+    "compliance_focus": "Include frequency, intensity, duration, and functional impairment (FID/Impairment) when relevant. Explain why a lower level of care is insufficient when risk is present.",
+    "dates_times": "Use ISO dates when exact dates are present in the PDF; otherwise, keep narrative without inventing dates.",
+    "null_policy": "If a fact is absent, set structured fields to null and use the fallback sentence for narratives.",
+    "output_preferences": {
+      "format": "markdown",
+      "tables": "markdown_table",
+      "numbers_in_text": "spell_small_integers_1_to_9"
+    }
+  },
+  "vocabulary": {
+    "length_enum": ["one_sentence", "two_sentences", "short_paragraph", "medium_paragraph", "long_paragraph", "bulleted_3_4", "bulleted_5_7", "table_md", "table_json"]
   },
   "sections": [
     {
       "id": "presenting_problems",
-      "title": "Presenting Problems:",
+      "title": "Presenting Problems",
+      "type": "narrative",
       "instruction": "Summarize the client’s primary concerns and reasons for the encounter based on the PDF.",
       "required": true,
-      "length": "3-5 sentences"
+      "length": "short_paragraph"
     },
     {
       "id": "onset",
-      "title": "Onset/Duration of Presenting Problems:",
-      "instruction": "List key symptoms and, when available, include frequency, intensity, and duration (FID).",
+      "title": "Onset/Duration of Presenting Problems",
+      "type": "narrative",
+      "instruction": "Describe key symptoms and include frequency, intensity, and duration (FID) when available.",
       "required": true,
       "length": "short_paragraph"
     },
     {
       "id": "resources",
-      "title": "Resources and Strengths:",
-      "instruction": "Document the clein's resources and strengths.",
+      "title": "Resources and Strengths",
+      "type": "narrative",
+      "instruction": "Document the client's resources, strengths, and protective factors exactly as stated.",
       "required": true,
       "length": "short_paragraph"
     },
     {
       "id": "barriers",
-      "title": "Please describe any barriers to treatment:",
-      "instruction": "Describe the client's barriers to treatment",
+      "title": "Barriers to Treatment",
+      "type": "narrative",
+      "instruction": "Describe the client's barriers to initiating or maintaining treatment (transportation, cost, technology, childcare, motivation, etc.).",
       "required": true,
-      "length": "3-4 bullet sentences"
+      "length": "bulleted_3_4"
     },
     {
       "id": "developmental_status",
-      "title": "Developmental Status:",
-      "instruction": "Report the client's developmental upbringing, how were they growing up?",
+      "title": "Developmental Status",
+      "type": "narrative",
+      "instruction": "Briefly describe developmental upbringing and relevant milestones if documented.",
       "required": false,
       "length": "short_paragraph"
     },
     {
       "id": "trauma_history",
-      "title": "Trauma History:",
-      "instruction": "State the client's trauma history",
+      "title": "Trauma History",
+      "type": "narrative",
+      "instruction": "State the client's trauma history (event(s), frequency, duration, age at occurrence if available).",
       "required": true,
       "length": "short_paragraph"
     },
     {
       "id": "financial_resources",
-      "title": "Financial Resources and Benefits:",
-      "instruction": "Report the client's way of earning an income",
+      "title": "Financial Resources and Benefits",
+      "type": "narrative",
+      "instruction": "Report the client's income source(s), benefits, or financial constraints that impact care.",
       "required": true,
-      "length": "1-2 sentences"
+      "length": "two_sentences"
     },
     {
-        "id": "access_services",
-        "title": "Ability to Access Services:",
-        "instruction": "Describe the client's ability to access services. Are there any concerns with this worth noting?",
-        "length": "short_paragraph"
+      "id": "access_services",
+      "title": "Ability to Access Services",
+      "type": "narrative",
+      "instruction": "Describe transportation, technology, language, or scheduling factors that affect access.",
+      "required": true,
+      "length": "short_paragraph"
     },
     {
-        "id": "living_situation_family_history",
-        "title": "Current/Previous Living Situation and/or Family History:",
-        "instruction": "Outline the client's living situation and their family history",
-        "length": "short_paragraph"
+      "id": "living_situation_family_history",
+      "title": "Current/Previous Living Situation and Family History",
+      "type": "narrative",
+      "instruction": "Outline current/previous living situation (household members, stability, safety) and relevant family mental health history.",
+      "required": true,
+      "length": "short_paragraph"
     },
     {
-        "id": "supports",
-        "title": "Primary Support Group: Siblings/Parents/Significant Relatives/Friends:",
-        "instruction": "create a table that reflects the client's support people. Outline their name, relationship to the client, age, if they are in their houshold or not, and their behavioral health.",
-        "length": "table"
+      "id": "supports",
+      "title": "Primary Support Group",
+      "type": "table",
+      "instruction": "List key supports.",
+      "required": false,
+      "length": "table_md",
+      "columns": [
+        { "id": "name", "title": "Name", "type": "string" },
+        { "id": "relationship", "title": "Relationship", "type": "string" },
+        { "id": "age", "title": "Age", "type": ["integer", "null"] },
+        { "id": "in_household", "title": "In Household", "type": "boolean" },
+        { "id": "behavioral_health", "title": "Behavioral Health (if relevant)", "type": ["string", "null"] }
+      ]
     },
     {
-        "id": "leal_profile",
-        "title": "Legal Profile:",
-        "instruction": "proivde yes or no for if the client has pending charges, currently on probation, current probation violations, custody issues, court hearing date, past convictions, past incarcerations, and other:",
-        "length": "table"
+      "id": "legal_profile",
+      "title": "Legal Profile",
+      "type": "table",
+      "instruction": "Provide yes/no and details when available.",
+      "required": false,
+      "length": "table_md",
+      "columns": [
+        { "id": "pending_charges", "title": "Pending Charges", "type": "boolean" },
+        { "id": "on_probation", "title": "On Probation", "type": "boolean" },
+        { "id": "probation_violations", "title": "Probation Violations", "type": "boolean" },
+        { "id": "custody_issues", "title": "Custody Issues", "type": "boolean" },
+        { "id": "court_date", "title": "Next Court Date (ISO or null)", "type": ["string", "null"] },
+        { "id": "past_convictions", "title": "Past Convictions", "type": ["string", "null"] },
+        { "id": "past_incarcerations", "title": "Past Incarcerations", "type": ["string", "null"] },
+        { "id": "other", "title": "Other", "type": ["string", "null"] }
+      ]
     },
     {
-        "id": "substance_profile",
-        "title": "Drug and Alcohol Profile:",
-        "instruction": "create a table that outlines the family's substance and drug usage. Include their name, relationship to client, type of substance, frequency/duration, and if they are currently using",
-        "length": "table"
+      "id": "substance_profile",
+      "title": "Drug and Alcohol Profile",
+      "type": "table",
+      "instruction": "Outline the client's and immediate family's substance use when documented.",
+      "required": false,
+      "length": "table_md",
+      "columns": [
+        { "id": "person_name", "title": "Name", "type": "string" },
+        { "id": "relationship", "title": "Relationship to Client", "type": "string" },
+        { "id": "substance", "title": "Substance", "type": "string" },
+        { "id": "frequency_duration", "title": "Frequency/Duration", "type": ["string", "null"] },
+        { "id": "currently_using", "title": "Currently Using", "type": "boolean" }
+      ]
     },
     {
-        "id": "risk_assessment",
-        "title": "Risk Assessment",
-        "instruction": "complete the following based on if the client is suicidal or homicidal",
-            "risk": [
-                {
-                    "id": "current_si_ideation",
-                    "title": "Current Ideation:",
-                    "instruction": "complete this if the client has current suicidal ideation",
-                    "length": "short_paragraph"
-                },
-                {
-                    "id": "current_si_intent",
-                    "title": "Current Intent:",
-                    "instruction": "complete this if the client has current suicidal intent",
-                    "length": "short_paragraph"
-                },
-                {
-                    "id": "self_harm",
-                    "title": "History of harm to self:",
-                    "instruction": "complete this if the client has currently harming themselves",
-                    "length": "short_paragraph"
-                },
-                {
-                    "id": "ideation_hisotry",
-                    "title": "History of Ideation:",
-                    "instruction": "complete this if the client has a history of suicidal ideation",
-                    "length": "short_paragraph"
-                }
-                {
-                    "id": "current_hi_ideation",
-                    "title": "Current Homicidal Ideation:",
-                    "instruction": "complete this if the client has current homicidal ideation",
-                    "length": "short_paragraph"
-                },
-                {
-                    "id": "current_hi_intent",
-                    "title": "Current Homicidal Intent:",
-                    "instruction": "complete this if the client has current homicidal intent",
-                    "length": "short_paragraph"
-                },
-                {
-                    "id": "harm_to_others",
-                    "title": "History of harm to Others:",
-                    "instruction": "complete this if the client has a history of harming others",
-                    "length": "short_paragraph"
-                },
-                {
-                    "id": "homicidal_ideation_hisotry",
-                    "title": "History of Homicidal Ideation:",
-                    "instruction": "complete this if the client has a history of homicidal ideation",
-                    "length": "short_paragraph"
-                }
-            ]
+      "id": "risk_assessment",
+      "title": "Risk Assessment",
+      "type": "group",
+      "instruction": "Document SI/HI exactly as stated. Use status fields for presence and provide narratives only if present.",
+      "required": true,
+      "children": [
+        {
+          "id": "suicidal_risk",
+          "title": "Suicidal Risk",
+          "type": "object",
+          "fields": [
+            { "id": "si_status", "title": "Current Suicidal Ideation Status", "type": "enum", "enum": ["none", "passive", "active", null] },
+            { "id": "si_intent_present", "title": "Current Intent Present", "type": ["boolean", "null"] },
+            { "id": "self_harm_history", "title": "History of Harm to Self", "type": ["string", "null"] },
+            { "id": "si_history", "title": "History of Suicidal Ideation", "type": ["string", "null"] },
+            { "id": "access_to_means", "title": "Access to Means", "type": ["string", "null"] },
+            { "id": "si_narrative", "title": "Narrative (only if si_status is not 'none')", "type": ["string", "null"] }
+          ]
+        },
+        {
+          "id": "homicidal_risk",
+          "title": "Homicidal Risk",
+          "type": "object",
+          "fields": [
+            { "id": "hi_status", "title": "Current Homicidal Ideation Status", "type": "enum", "enum": ["none", "passive", "active", null] },
+            { "id": "hi_intent_present", "title": "Current Intent Present", "type": ["boolean", "null"] },
+            { "id": "harm_to_others_history", "title": "History of Harm to Others", "type": ["string", "null"] },
+            { "id": "hi_history", "title": "History of Homicidal Ideation", "type": ["string", "null"] },
+            { "id": "hi_narrative", "title": "Narrative (only if hi_status is not 'none')", "type": ["string", "null"] }
+          ]
+        }
+      ]
     },
     {
-        "id": "communication_needs",
-        "title": "Does client have communication needs?:",
-        "instruction": "write a narrative if the client has communication needs",
-        "length": "1-2 sentences"
+      "id": "communication_needs",
+      "title": "Communication Needs",
+      "type": "narrative",
+      "instruction": "If the client has communication needs, summarize them and any accommodations.",
+      "required": false,
+      "length": "two_sentences"
     },
     {
-        "id": "adaptive",
-        "title": "Does client have mobility and adaptive equipment needs?:",
-        "instruction": "Write a narrative if the client has mobility and or adaptive needs",
-        "length": "1-2 sentences"
+      "id": "adaptive",
+      "title": "Mobility and Adaptive Equipment Needs",
+      "type": "narrative",
+      "instruction": "Summarize mobility limitations and adaptive equipment needs if documented.",
+      "required": false,
+      "length": "two_sentences"
     },
     {
-        "id": "clinical_findings",
-        "title": "Explain clinically significant findings:",
-        "instruction": "Write a clinical and insurance-compliant narrative of the full report findings",
-        "length": "short_paragraph"
+      "id": "clinical_findings",
+      "title": "Clinically Significant Findings",
+      "type": "narrative",
+      "instruction": "Provide a concise, payer-compliant synthesis of the assessment noting FID, functional impairment, and risk if present.",
+      "required": true,
+      "length": "short_paragraph"
     },
     {
-        "id": "strengths",
-        "title": "Resources and Strengths and Interests:",
-        "instruction": "Develop a narrative documenting the client's strengths and interests",
-        "length": "short_paragraph"
+      "id": "strengths",
+      "title": "Resources, Strengths, and Interests",
+      "type": "narrative",
+      "instruction": "Summarize client strengths and interests that support treatment engagement and recovery.",
+      "required": true,
+      "length": "short_paragraph"
     },
     {
-        "id": "safety_plan",
-        "title": "Safety Plan",
-        "instruction": "Write an extensive clinical insurance-compliant narrative for the following sections with safety of the client as a priority",
-            "safety_sections": [
-                {
-                    "title": "What are identified maladaptive behaviors that place the client at risk: (i.e., suicidal behaviors, lack of supervision by parent, sexually acting out, drug use, etc.):"
-                },
-                {
-                    "title": "Identify triggers to behaviors: (ie, when I’m left alone, being yelled at, not having someone to talk to, etc.):"
-                },
-                {
-                    "title": "dentified needs to address maladaptive behaviors:"
-                }
-            ],
-        "length": "short_paragraph"
+      "id": "safety_plan",
+      "title": "Safety Plan",
+      "type": "group",
+      "instruction": "Complete only if any risk status is not 'none'. Use facts only.",
+      "required": false,
+      "children": [
+        { "id": "maladaptive_behaviors", "title": "Identified maladaptive behaviors placing the client at risk", "type": ["string", "null"] },
+        { "id": "triggers", "title": "Triggers to behaviors", "type": ["string", "null"] },
+        { "id": "identified_needs", "title": "Identified needs to address maladaptive behaviors", "type": ["string", "null"] }
+      ]
     },
     {
-        "id": "assessment_summary",
-        "title": "Assessment Summary/Recommendations:",
-        "instruction": "provide an extensive insurance-compliant narrative of the assessment summary and recommendations",
-        "length":"short_paragraph"
+      "id": "assessment_summary",
+      "title": "Assessment Summary and Recommendations",
+      "type": "narrative",
+      "instruction": "Provide an insurance-compliant summary with level-of-care justification, referrals, and concrete next steps with dates/times when available.",
+      "required": true,
+      "length": "medium_paragraph"
+    },
+    {
+      "id": "additional_information",
+      "title": "Additional Information",
+      "type": "narrative",
+      "instruction": "Provide any additional clinically relevant information not captured above.",
+      "required": false,
+      "length": "short_paragraph"
     }
   ]
 }
